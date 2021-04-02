@@ -76,7 +76,7 @@ const Home: React.FC<Props> = ({ products, error }) => {
 export async function getStaticProps() {
   const products = await axios
     .get(
-      `https://docs.google.com/spreadsheets/d/e/2PACX-1vTXGFFgZ7YL0YlbdNroaEphDlm_ihBNcXnSPfQJyEveMHaHGgplOftCRlTkbDByWt4lb2_r4RYxqE0J/pub?output=csv`,
+      process.env.FILE_URL,
       {
         responseType: "blob",
       }
