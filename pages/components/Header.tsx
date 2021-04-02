@@ -94,27 +94,29 @@ const Header: React.FC = () => {
         finalFocusRef={cartRef}
       >
         <DrawerOverlay zIndex={999999}>
-          <DrawerContent>
+          <DrawerContent paddingTop={4}>
             <DrawerCloseButton />
             <DrawerHeader>Carrito</DrawerHeader>
-            <DrawerBody marginTop={12}>
+            <DrawerBody marginTop={6}>
               {cart.length > 0 && (
-                <List spacing={3}>
+                <List spacing={4}>
                   {cart.map((item) => (
                     <ListItem key={item.product.id}>
                       <Stack direction="row" justifyContent="space-between">
-                        <Text fontSize="sm">
-                          {item.product.title} x {item.qty}
-                        </Text>
-                        <Text fontSize="sm" fontWeight="500">
-                          ${item.product.price * item.qty}
-                        </Text>
+                        <Box>
+                          <Text fontSize="sm">
+                            {item.product.title} x {item.qty}
+                          </Text>
+                          <Text fontSize="md" fontWeight="500">
+                            ${item.product.price * item.qty}
+                          </Text>
+                        </Box>
                         <IconButton
                           onClick={() => removeFromCart(item.product)}
                           aria-label="delete"
                           colorScheme="white"
                           color="gray.500"
-                          variant="solid"
+                          variant="outline"
                           fontSize="md"
                           icon={<DeleteIcon />}
                         />
@@ -127,7 +129,7 @@ const Header: React.FC = () => {
                 <Text textAlign="center">No hay ítems</Text>
               )}
             </DrawerBody>
-            <DrawerFooter marginBottom={16}>
+            <DrawerFooter >
               <Stack direction="column" width="100%">
                 <Stack direction="row" justifyContent="space-between">
                   <Text fontSize="xl">Total</Text>
