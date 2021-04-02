@@ -4,26 +4,25 @@ import { Image } from "@chakra-ui/image";
 import { Grid, Stack, Text, Box, Heading } from "@chakra-ui/layout";
 import Papa from "papaparse";
 
-import { useEffect, useState, useContext } from "react";
+import { useContext } from "react";
 
-import { Input } from "@chakra-ui/input";
 import { Product } from "../product/type";
 import { CartContext, Context } from "../product/context";
 import axios from "axios";
 
 interface Props {
   products: Product[];
+  error: string;
 }
 
-const Home: React.FC<Props> = ({ products }) => {
+const Home: React.FC<Props> = ({ products, error }) => {
   const {
     actions: { addToCart },
   } = useContext<Context>(CartContext);
 
   // const [filtered, setFiltered] = useState<Product[]>(products);
- // const [term, setTerm] = useState<string>("");
-
-  if (!products)
+  // const [term, setTerm] = useState<string>("");
+  if (!products || products.length === 0)
     return (
       <Box>
         <Text>No encontramos ningún producto.</Text>
@@ -31,26 +30,9 @@ const Home: React.FC<Props> = ({ products }) => {
     );
   return (
     <Box width="100%">
-      {/* <Stack
-        direction="row"
-        padding={4}
-        marginY={8}
-        alignItems="center"
-        backgroundColor="gray.100"
-        borderRadius={4}
-        boxShadow="sm"
-        width="100%"
-      >
-        <Text>Buscar producto:</Text>
-        <Input
-          value={term}
-          onChange={(e) => setTerm(e.target.value)}
-          placeholder="Ingrese su búsqueda"
-          maxWidth="xl"
-          backgroundColor="white"
-        ></Input>
-      </Stack> */}
-      <Heading marginY={9} color="gray.700">Especialidades</Heading>
+      <Heading marginY={9} color="gray.700">
+        Especialidades
+      </Heading>
       <Grid gridGap={8} templateColumns="repeat(auto-fill, minmax(240px,1fr))">
         {products?.map((product) => (
           <Stack
@@ -110,12 +92,14 @@ export async function getStaticProps() {
           });
         },
         error: (error) => {
-          throw Error(error.message);
+          return error.message;
         },
       });
+    })
+    .catch((error) => {
+      return { data: [] };
     });
 
-  console.log(products);
   return {
     revalidate: 5,
     props: {

@@ -1,5 +1,6 @@
 import { createContext, useState } from "react";
 import { CartItem, Product } from "./type";
+import { useToast } from "@chakra-ui/react"
 
 export interface Context {
   cart: CartItem[];
@@ -14,7 +15,7 @@ const CartContext = createContext({} as Context);
 
 const CartProvider: React.FC = ({ children }) => {
   const [cart, setCart] = useState<CartItem[]>([]);
-
+  const toast = useToast();
   function addToCart(product: Product) {
     if (!cart.find((x) => x.product.id === product.id)) {
       setCart((_cart) => _cart.concat({ product, qty: 1 }));
@@ -26,6 +27,14 @@ const CartProvider: React.FC = ({ children }) => {
       );
       setCart(newCart);
     }
+    toast({
+      title: "Item agregado al carrito.",
+      description: `Agregaste un ${product.title} al carrito.`,
+      status: "info",
+      duration: 5000,
+      isClosable: true,
+      position: "top-left",
+    })
   }
 
   function removeFromCart(product: Product) {
