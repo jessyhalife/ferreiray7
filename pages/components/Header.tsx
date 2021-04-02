@@ -35,7 +35,7 @@ const Header: React.FC = () => {
   const message = useMemo(
     () =>
       `Hola! quería hacerte el siguiente pedido:\n ${cart
-        .map((x) => `* ${x.product.title} x ${x.qty}`)
+        .map((x) => `* ${x.product.title} (${x.product.description}) x ${x.qty}`)
         .join("\n")}`,
     [cart]
   );
