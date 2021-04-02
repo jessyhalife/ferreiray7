@@ -3,13 +3,6 @@ import { CartContext, CartProvider, Context } from "../product/context";
 import {
   ChakraProvider,
   Container,
-  Heading,
-  Stack,
-  Image,
-  Divider,
-  Text,
-  Button,
-  Box,
 } from "@chakra-ui/react";
 import { useContext } from "react";
 import Header from "./components/Header";

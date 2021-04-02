@@ -1,13 +1,15 @@
 import { Button } from "@chakra-ui/button";
 
 import { Image } from "@chakra-ui/image";
-import { Grid, Stack, Text, Box } from "@chakra-ui/layout";
+import { Grid, Stack, Text, Box, Heading } from "@chakra-ui/layout";
+import Papa from "papaparse";
 
 import { useEffect, useState, useContext } from "react";
 
 import { Input } from "@chakra-ui/input";
 import { Product } from "../product/type";
 import { CartContext, Context } from "../product/context";
+import axios from "axios";
 
 interface Props {
   products: Product[];
@@ -18,18 +20,10 @@ const Home: React.FC<Props> = ({ products }) => {
     actions: { addToCart },
   } = useContext<Context>(CartContext);
 
-  const [filtered, setFiltered] = useState<Product[]>(products);
-  const [term, setTerm] = useState<string>("");
-  
-  useEffect(() => {
-    if (term === "") setFiltered(products);
-    else
-      setFiltered((items) =>
-        items.filter((x) => x.title.toLowerCase().includes(term.toLowerCase()))
-      );
-  }, [term]);
+  // const [filtered, setFiltered] = useState<Product[]>(products);
+ // const [term, setTerm] = useState<string>("");
 
-  if (!filtered)
+  if (!products)
     return (
       <Box>
         <Text>No encontramos ningún producto.</Text>
@@ -37,7 +31,7 @@ const Home: React.FC<Props> = ({ products }) => {
     );
   return (
     <Box width="100%">
-      <Stack
+      {/* <Stack
         direction="row"
         padding={4}
         marginY={8}
@@ -55,9 +49,10 @@ const Home: React.FC<Props> = ({ products }) => {
           maxWidth="xl"
           backgroundColor="white"
         ></Input>
-      </Stack>
+      </Stack> */}
+      <Heading marginY={9} color="gray.700">Especialidades</Heading>
       <Grid gridGap={8} templateColumns="repeat(auto-fill, minmax(240px,1fr))">
-        {filtered.map((product) => (
+        {products?.map((product) => (
           <Stack
             boxShadow="sm"
             borderRadius="md"
@@ -76,11 +71,11 @@ const Home: React.FC<Props> = ({ products }) => {
             <Text fontSize="xl" fontWeight="500">
               {product.title}
             </Text>
+            <Text fontSize="md">{product.description}</Text>
+
             <Text fontSize="2xl" fontWeight="500">
               ${product.price}
             </Text>
-
-            <small>{product.description}</small>
 
             <Button
               colorScheme="pink"
@@ -97,15 +92,34 @@ const Home: React.FC<Props> = ({ products }) => {
 };
 
 export async function getStaticProps() {
-  const products = await fetch(`https://fakestoreapi.com/products`)
-    .then((result) => {
-      return result.json();
-    })
-    .then((data: Product[]) => data);
+  const products = await axios
+    .get(
+      `https://docs.google.com/spreadsheets/d/e/2PACX-1vTXGFFgZ7YL0YlbdNroaEphDlm_ihBNcXnSPfQJyEveMHaHGgplOftCRlTkbDByWt4lb2_r4RYxqE0J/pub?output=csv`,
+      {
+        responseType: "blob",
+      }
+    )
+
+    .then((response) => {
+      return Papa.parse(response.data, {
+        header: true,
+        complete: (results) => {
+          const products = results.data as Product[];
+          return products.map((item) => {
+            return { ...item, id: Number(item.id), price: Number(item.price) };
+          });
+        },
+        error: (error) => {
+          throw Error(error.message);
+        },
+      });
+    });
+
+  console.log(products);
   return {
-    revalidate: 20,
+    revalidate: 5,
     props: {
-      products,
+      products: products.data,
     },
   };
 }

@@ -60,10 +60,7 @@ const Header: React.FC = () => {
         margin="auto"
       >
         <Stack direction="row" alignItems="center">
-          <Image src="shop.png"></Image>
-          <Text fontWeight="bold" fontSize="lg">
-            Tienda de Jeni
-          </Text>
+          <Image src="shop.png" width="128px"></Image>        
         </Stack>
         <Button
           variant="solid"
@@ -107,6 +104,7 @@ const Header: React.FC = () => {
                           <Text fontSize="sm">
                             {item.product.title} x {item.qty}
                           </Text>
+                          <small>{item.product.description}</small>
                           <Text fontSize="md" fontWeight="500">
                             ${item.product.price * item.qty}
                           </Text>
