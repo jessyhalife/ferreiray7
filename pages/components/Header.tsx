@@ -31,14 +31,14 @@ const Header: React.FC = () => {
   } = useContext<Context>(CartContext);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cartRef = useRef();
-  const message = "holis";
-  //   const message = useMemo(
-  //     () =>
-  //       `Hola! quería hacerte el siguiente pedido:\n ${cart
-  //         .map((x) => `* ${x.product.title} x ${x.qty}`)
-  //         .join("\n")}`,
-  //     [cart]
-  //   );
+
+  const message = useMemo(
+    () =>
+      `Hola! quería hacerte el siguiente pedido:\n ${cart
+        .map((x) => `* ${x.product.title} x ${x.qty}`)
+        .join("\n")}`,
+    [cart]
+  );
 
   return (
     <Box
@@ -61,9 +61,18 @@ const Header: React.FC = () => {
       >
         <Stack direction="row" alignItems="center">
           <Image src="shop.png"></Image>
-          <Text fontWeight="bold" fontSize="lg">Tienda de Jeni</Text>
+          <Text fontWeight="bold" fontSize="lg">
+            Tienda de Jeni
+          </Text>
         </Stack>
-        <Button variant="solid" colorScheme="green" onClick={onOpen} borderWidth={1} borderColor="green.600" boxShadow="sm">
+        <Button
+          variant="solid"
+          colorScheme="green"
+          onClick={onOpen}
+          borderWidth={1}
+          borderColor="green.600"
+          boxShadow="sm"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
