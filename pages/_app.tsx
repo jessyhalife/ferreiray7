@@ -1,17 +1,34 @@
 import "../styles/globals.css";
-import { ChakraProvider, Container, Heading, VStack, Image, Divider } from "@chakra-ui/react";
+import { CartContext, CartProvider, Context } from "../product/context";
+import {
+  ChakraProvider,
+  Container,
+  Heading,
+  Stack,
+  Image,
+  Divider,
+  Text,
+  Button,
+  Box,
+} from "@chakra-ui/react";
+import { useContext } from "react";
+import Header from "./components/Header";
 
 function MyApp({ Component, pageProps }) {
+  const { cart } = useContext<Context>(CartContext);
+
   return (
     <ChakraProvider>
-      <Container marginY={8} maxWidth="container.xl" backgroundColor="gray.100" centerContent padding={8}>
-        <VStack justifyContent="space-between">
-          <Image src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRjhhpl4A3FZhw33Eyn6uLAKE1odIzxjzXnYg&usqp=CAU" width="128"></Image>
-          <Heading>Tienda de Jeni</Heading>
-        </VStack>
-        <Divider marginY={8}></Divider>
-        <Component {...pageProps} />
-      </Container>
+      <CartProvider>
+        <Header />
+        <Container
+          maxWidth="container.xl"
+          centerContent
+          padding={4}
+        >
+          <Component {...pageProps} />
+        </Container>
+      </CartProvider>
     </ChakraProvider>
   );
 }
