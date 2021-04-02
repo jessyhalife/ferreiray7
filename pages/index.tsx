@@ -1,29 +1,12 @@
-import { Button, IconButton } from "@chakra-ui/button";
-import { useDisclosure } from "@chakra-ui/hooks";
-import { Image } from "@chakra-ui/image";
-import {
-  Grid,
-  Stack,
-  Text,
-  Box,
-  List,
-  ListItem,
-  Link,
-} from "@chakra-ui/layout";
-import {
-  Drawer,
-  DrawerBody,
-  DrawerCloseButton,
-  DrawerContent,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerOverlay,
-} from "@chakra-ui/modal";
-import { useEffect, useRef, useState, useMemo, useContext } from "react";
+import { Button } from "@chakra-ui/button";
 
-import { DeleteIcon } from "@chakra-ui/icons";
+import { Image } from "@chakra-ui/image";
+import { Grid, Stack, Text, Box } from "@chakra-ui/layout";
+
+import { useEffect, useState, useContext } from "react";
+
 import { Input } from "@chakra-ui/input";
-import { Product, CartItem } from "../product/type";
+import { Product } from "../product/type";
 import { CartContext, Context } from "../product/context";
 
 interface Props {
@@ -32,40 +15,12 @@ interface Props {
 
 const Home: React.FC<Props> = ({ products }) => {
   const {
-    cart,
     actions: { addToCart },
   } = useContext<Context>(CartContext);
 
   const [filtered, setFiltered] = useState<Product[]>(products);
   const [term, setTerm] = useState<string>("");
-
-  useEffect(() => {
-    console.log(cart);
-  }, [cart]);
-
-  // function handleAddToCart(product: Product) {
-  //   if (!cart.find((x) => x.product.id === product.id)) {
-  //     setCart((_cart) => _cart.concat({ product, qty: 1 }));
-  //   } else {
-  //     const newCart = cart.map((item) =>
-  //       item.product.id === product.id
-  //         ? { product: item.product, qty: item.qty + 1 }
-  //         : item
-  //     );
-  //     setCart(newCart);
-  //   }
-  // }
-
-  // function handleRemove(product: Product) {
-  //   const newCart = cart.map((item) =>
-  //     item.product.id === product.id
-  //       ? { product: item.product, qty: item.qty - 1 }
-  //       : item
-  //   );
-
-  //   setCart(newCart.filter((x) => x.qty > 0));
-  // }
-
+  
   useEffect(() => {
     if (term === "") setFiltered(products);
     else
@@ -81,7 +36,7 @@ const Home: React.FC<Props> = ({ products }) => {
       </Box>
     );
   return (
-    <Box>
+    <Box width="100%">
       <Stack
         direction="row"
         padding={4}
@@ -90,6 +45,7 @@ const Home: React.FC<Props> = ({ products }) => {
         backgroundColor="gray.100"
         borderRadius={4}
         boxShadow="sm"
+        width="100%"
       >
         <Text>Buscar producto:</Text>
         <Input
@@ -127,11 +83,11 @@ const Home: React.FC<Props> = ({ products }) => {
             <small>{product.description}</small>
 
             <Button
-              colorScheme="purple"
-              variant="solid"
+              colorScheme="pink"
+              variant="outline"
               onClick={() => addToCart(product)}
             >
-              Add to cart
+              Agregar al carrito
             </Button>
           </Stack>
         ))}
@@ -140,7 +96,7 @@ const Home: React.FC<Props> = ({ products }) => {
   );
 };
 
-export async function getStaticProps(context) {
+export async function getStaticProps() {
   const products = await fetch(`https://fakestoreapi.com/products`)
     .then((result) => {
       return result.json();
