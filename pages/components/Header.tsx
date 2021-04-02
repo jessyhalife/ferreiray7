@@ -152,7 +152,7 @@ const Header: React.FC = () => {
                   isExternal
                   as={Link}
                   variant="solid"
-                  href={`https://wa.me/5491124628755?text=${encodeURIComponent(
+                  href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_PHONE}?text=${encodeURIComponent(
                     message
                   )}`}
                 >
