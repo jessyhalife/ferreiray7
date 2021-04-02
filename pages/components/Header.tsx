@@ -94,7 +94,7 @@ const Header: React.FC = () => {
         finalFocusRef={cartRef}
       >
         <DrawerOverlay zIndex={999999}>
-          <DrawerContent paddingTop={4}>
+          <DrawerContent paddingY={6}>
             <DrawerCloseButton />
             <DrawerHeader>Carrito</DrawerHeader>
             <DrawerBody marginTop={6}>
