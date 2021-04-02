@@ -22,6 +22,7 @@ import {
 import { useEffect, useRef, useState, useMemo } from "react";
 
 import { DeleteIcon } from "@chakra-ui/icons";
+import { Input } from "@chakra-ui/input";
 
 interface Props {
   products: Product[];
@@ -34,15 +35,17 @@ interface CartItem {
 
 const Home: React.FC<Props> = ({ products }) => {
   const [cart, setCart] = useState<CartItem[]>([]);
+  const [filtered, setFiltered] = useState<Product[]>(products);
+  const [term, setTerm] = useState<string>("");
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cartRef = useRef();
 
   const message = useMemo(
     () =>
-      `Hola! quería hacerte el siguiente pedido:\n ${cart.map(
-        (x) => `* ${x.product.title} x ${x.qty}`
-      ).join('\n')}`
-    ,[cart]
+      `Hola! quería hacerte el siguiente pedido:\n ${cart
+        .map((x) => `* ${x.product.title} x ${x.qty}`)
+        .join("\n")}`,
+    [cart]
   );
 
   useEffect(() => {
@@ -72,10 +75,18 @@ const Home: React.FC<Props> = ({ products }) => {
     setCart(newCart.filter((x) => x.qty > 0));
   }
 
-  if (!products)
+  useEffect(() => {
+    if (term === "") setFiltered(products);
+    else
+      setFiltered((items) =>
+        items.filter((x) => x.title.toLowerCase().includes(term.toLowerCase()))
+      );
+  }, [term]);
+
+  if (!filtered)
     return (
       <Box>
-        <Text>Sorry, we don't have any products yet.</Text>
+        <Text>No encontramos ningún producto.</Text>
       </Box>
     );
   return (
@@ -87,10 +98,15 @@ const Home: React.FC<Props> = ({ products }) => {
           justifyContent="flex-end"
           position="sticky"
           top={0}
-          zIndex={99999} 
-         
+          zIndex={99999}
         >
-          <Button colorScheme="green" ref={cartRef} variant="solid"onClick={onOpen}  width={["100%", "auto", "auto"]}>
+          <Button
+            colorScheme="green"
+            ref={cartRef}
+            variant="solid"
+            onClick={onOpen}
+            width={["100%", "auto", "auto"]}
+          >
             Ver carrito
             <Text marginLeft={2} fontWeight="500">
               ({cart.reduce((cant, item) => cant + item.qty, 0)})
@@ -104,7 +120,7 @@ const Home: React.FC<Props> = ({ products }) => {
         onClose={onClose}
         finalFocusRef={cartRef}
       >
-        <DrawerOverlay           zIndex={999999} >
+        <DrawerOverlay zIndex={999999}>
           <DrawerContent>
             <DrawerCloseButton />
             <DrawerHeader>Carrito</DrawerHeader>
@@ -176,12 +192,30 @@ const Home: React.FC<Props> = ({ products }) => {
           </DrawerContent>
         </DrawerOverlay>
       </Drawer>
+      <Stack
+        direction="row"
+        padding={4}
+        marginY={8}
+        alignItems="center"
+        backgroundColor="gray.200"
+        borderRadius={4}
+        boxShadow="sm"
+      >
+        <Text>Buscar producto:</Text>
+        <Input
+          value={term}
+          onChange={(e) => setTerm(e.target.value)}
+          placeholder="Ingrese su búsqueda"
+          maxWidth="xl"
+        ></Input>
+      </Stack>
       <Grid gridGap={8} templateColumns="repeat(auto-fill, minmax(240px,1fr))">
-        {products.map((product) => (
+        {filtered.map((product) => (
           <Stack
+            boxShadow="sm"
             borderRadius="md"
             key={product.id}
-            borderColor="gray.400"
+            borderColor="gray.200"
             padding={4}
             borderWidth={1}
             justifyContent="space-between"
