@@ -154,8 +154,9 @@ const Header: React.FC = () => {
                     message
                   )}`}
                 >
-                  Checkout
+                    Hacé tu pedido
                 </Button>
+                <Text textAlign="center" color="gray.500" fontSize="xs">No vas a realizar ningún pago.<br /> Se enviará tu pedido a través de whatsapp.</Text >
                 <Button variant="link" onClick={emptyCart}>
                   Vaciar carrito
                 </Button>
